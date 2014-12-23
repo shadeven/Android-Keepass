@@ -1,7 +1,8 @@
-package com.alexfu.keepass;
+package com.alexfu.keepass.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+
+import com.alexfu.keepass.R;
 
 
 public class MainActivity extends BaseActivity {

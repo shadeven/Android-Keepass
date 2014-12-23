@@ -1,7 +1,9 @@
-package com.alexfu.keepass;
+package com.alexfu.keepass.ui;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+
+import com.alexfu.keepass.R;
 
 /**
  * An Activity from which other Activities will inherit from.
