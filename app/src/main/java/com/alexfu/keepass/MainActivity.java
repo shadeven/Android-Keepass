@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends BaseActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
