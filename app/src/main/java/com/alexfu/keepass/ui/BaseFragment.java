@@ -1,7 +1,9 @@
 package com.alexfu.keepass.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 
 /**
  * A Fragment from which other Fragments will inherit from.
@@ -17,5 +19,13 @@ public abstract class BaseFragment extends Fragment {
       String className = getClass().getName();
       throw new IllegalStateException(className + " must be attached to a BaseActivity!");
     }
+  }
+
+  public Toolbar getSupportActionbar() {
+    return ((BaseActivity) getActivity()).getSupportActionbar();
+  }
+
+  public Context getApplicationContext() {
+    return getActivity().getApplicationContext();
   }
 }
