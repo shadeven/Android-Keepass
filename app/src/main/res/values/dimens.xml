@@ -1,2 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <dimen name="simple_list_item_height">52dp</dimen>
+
+  <dimen name="keyline_vertical_1">16dp</dimen>
+
 </resources>
