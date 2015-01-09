@@ -37,7 +37,7 @@ public class DBProviderFragment extends BaseFragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    listAdapter = new DBProviderAdapter(getApplicationContext(), DBProviderFactory.getAll());
+    listAdapter = new DBProviderAdapter(getActivity(), DBProviderFactory.getAll());
     listView.setAdapter(listAdapter);
   }
 }
