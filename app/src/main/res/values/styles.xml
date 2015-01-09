@@ -1,11 +1,9 @@
 <resources>
 
-  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-    <item name="colorPrimary">#3F51B5</item>
-    <item name="colorPrimaryDark">#303F9F</item>
-
-    <item name="android:windowActionBar">false</item>
-    <item name="windowActionBar">false</item>
+  <!-- Default toolbar Actionbar theme -->
+  <style name="Keepass.Actionbar" parent="Widget.AppCompat.Toolbar">
+    <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
   </style>
 
 </resources>
