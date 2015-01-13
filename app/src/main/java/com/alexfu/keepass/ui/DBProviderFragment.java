@@ -37,7 +37,7 @@ public class DBProviderFragment extends BaseFragment implements AdapterView.OnIt
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    dbProviders = DBProviderFactory.getAll();
+    dbProviders = DBProviderFactory.getAll(getActivity());
   }
 
   @Override

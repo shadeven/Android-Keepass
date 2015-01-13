@@ -7,5 +7,6 @@ import android.content.Intent;
  */
 public interface DBProvider {
   public String getName();
+  public String getDescription();
   public Intent getFilePickerIntent();
 }
