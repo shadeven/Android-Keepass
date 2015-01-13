@@ -46,7 +46,7 @@ public class DBProviderAdapter extends BaseAdapter {
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
       LayoutInflater inflater = LayoutInflater.from(context);
-      convertView = inflater.inflate(R.layout.partial_simple_list_item, parent, false);
+      convertView = inflater.inflate(R.layout.list_item_two_line, parent, false);
 
       DBProviderViewHolder viewHolder = new DBProviderViewHolder(convertView);
       convertView.setTag(viewHolder);
@@ -57,14 +57,16 @@ public class DBProviderAdapter extends BaseAdapter {
     DBProvider provider = getItem(position);
     DBProviderViewHolder viewHolder = (DBProviderViewHolder) convertView.getTag();
 
-    viewHolder.name.setText(provider.getName());
+    viewHolder.primaryText.setText(provider.getName());
+    viewHolder.secondaryText.setText(provider.getDescription());
 
     return convertView;
   }
 
   class DBProviderViewHolder extends ButterViewHolder {
 
-    @InjectView(R.id.name) TextView name;
+    @InjectView(R.id.primary_text) TextView primaryText;
+    @InjectView(R.id.secondary_text) TextView secondaryText;
 
     public DBProviderViewHolder(View source) {
       super(source);

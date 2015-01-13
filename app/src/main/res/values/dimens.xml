@@ -2,6 +2,7 @@
 <resources>
 
   <dimen name="simple_list_item_height">52dp</dimen>
+  <dimen name="list_two_line_item_height">72dp</dimen>
 
   <dimen name="keyline_vertical_1">16dp</dimen>
 
