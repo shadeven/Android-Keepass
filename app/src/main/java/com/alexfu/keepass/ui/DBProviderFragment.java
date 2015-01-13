@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.alexfu.keepass.R;
 import com.alexfu.keepass.ui.adapter.DBProviderAdapter;
@@ -26,8 +25,8 @@ public class DBProviderFragment extends BaseFragment implements AdapterView.OnIt
 
   private DBProviderAdapter listAdapter;
   private List<DBProvider> dbProviders;
-  
-  private static final int READ_REQUEST_CODE = 123;
+
+  public static final int READ_REQUEST_CODE = 123;
 
   public static DBProviderFragment newInstance() {
     DBProviderFragment fragment = new DBProviderFragment();
@@ -61,15 +60,5 @@ public class DBProviderFragment extends BaseFragment implements AdapterView.OnIt
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Intent intent = dbProviders.get(position).getFilePickerIntent();
     startActivityForResult(intent, READ_REQUEST_CODE);
-  }
-
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    switch (requestCode) {
-      case READ_REQUEST_CODE:
-        // TODO: Process file
-        break;
-    }    
   }
 }
