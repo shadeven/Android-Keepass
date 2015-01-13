@@ -1,28 +1,43 @@
 package com.alexfu.keepass.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.alexfu.keepass.R;
 import com.alexfu.keepass.ui.adapter.DBProviderAdapter;
+import com.alexfu.keepass.ui.provider.DBProvider;
 import com.alexfu.keepass.ui.provider.DBProviderFactory;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class DBProviderFragment extends BaseFragment {
+public class DBProviderFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
   @InjectView(android.R.id.list) ListView listView;
 
   private DBProviderAdapter listAdapter;
+  private List<DBProvider> dbProviders;
+  
+  private static final int READ_REQUEST_CODE = 123;
 
   public static DBProviderFragment newInstance() {
     DBProviderFragment fragment = new DBProviderFragment();
     return fragment;
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    dbProviders = DBProviderFactory.getAll();
   }
 
   @Override
@@ -37,7 +52,24 @@ public class DBProviderFragment extends BaseFragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    listAdapter = new DBProviderAdapter(getActivity(), DBProviderFactory.getAll());
+    listAdapter = new DBProviderAdapter(getActivity(), dbProviders);
+    listView.setOnItemClickListener(this);
     listView.setAdapter(listAdapter);
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    Intent intent = dbProviders.get(position).getFilePickerIntent();
+    startActivityForResult(intent, READ_REQUEST_CODE);
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    switch (requestCode) {
+      case READ_REQUEST_CODE:
+        // TODO: Process file
+        break;
+    }    
   }
 }
