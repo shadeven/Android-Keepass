@@ -3,13 +3,13 @@ package com.alexfu.keepass.ui.provider;
 import android.content.Intent;
 
 /**
- * Provides a reference to a Keepass database that is directly on the filesystem.
+ * Provides a reference to a Keepass database provided by Androids Storage Access Framework.
  */
-public class FileProvider implements DBProvider {
+public class SAFProvider implements DBProvider {
 
   private String name;
 
-  public FileProvider(String name) {
+  public SAFProvider(String name) {
     this.name = name;
   }
 

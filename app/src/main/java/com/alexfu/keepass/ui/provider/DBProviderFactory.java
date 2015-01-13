@@ -11,7 +11,7 @@ public class DBProviderFactory {
 
   public static List<DBProvider> getAll() {
     List<DBProvider> providers = new ArrayList<>();
-    providers.add(new FileProvider("File"));
+    providers.add(new SAFProvider("Storage Access Framework"));
     return providers;
   }
 }
