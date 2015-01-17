@@ -3,6 +3,8 @@ package com.alexfu.keepass.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
 /**
@@ -21,8 +23,12 @@ public abstract class BaseFragment extends Fragment {
     }
   }
 
-  public Toolbar getSupportActionbar() {
-    return ((BaseActivity) getActivity()).getSupportActionbar();
+  public Toolbar getToolbarActionbar() {
+    return ((BaseActivity) getActivity()).getToolbarActionbar();
+  }
+  
+  public ActionBar getSupportActionBar() {
+    return ((ActionBarActivity) getActivity()).getSupportActionBar();
   }
 
   public Context getApplicationContext() {

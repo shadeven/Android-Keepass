@@ -16,10 +16,10 @@ public abstract class BaseActivity extends ActionBarActivity {
   @Override
   public void setContentView(int layoutResID) {
     super.setContentView(layoutResID);
-    getSupportActionbar();
+    getToolbarActionbar();
   }
 
-  public Toolbar getSupportActionbar() {
+  public Toolbar getToolbarActionbar() {
     if (actionBar == null) {
       actionBar = (Toolbar) findViewById(R.id.action_bar);
       setSupportActionBar(actionBar);

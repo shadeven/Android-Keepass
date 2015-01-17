@@ -18,6 +18,12 @@ public class AuthenticationFragment extends BaseFragment {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    getSupportActionBar().setTitle("Authentication");
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, 
                            @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_authentication, container, false);
