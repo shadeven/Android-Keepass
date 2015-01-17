@@ -1,21 +1,17 @@
 package com.alexfu.keepass.ui;
 
-import android.net.Uri;
-import android.os.Bundle;
-
-import pl.sind.keepass.kdb.KeePassDataBase;
+import pl.sind.keepass.kdb.v1.KeePassDataBaseV1;
 
 public class DatabaseFragment extends BaseFragment {
   
-  private KeePassDataBase kdb;
+  private KeePassDataBaseV1 kdb;
   
-  private static final String KDB_URI = "kdb_uri";
-  
-  public static DatabaseFragment newInstance(Uri kdbUri) {
-    Bundle args = new Bundle();
-    args.putString(KDB_URI, kdbUri.getPath());
+  public static DatabaseFragment newInstance() {
     DatabaseFragment fragment = new DatabaseFragment();
-    fragment.setArguments(args);
     return fragment;
+  }
+
+  public void setDatabase(KeePassDataBaseV1 kdb) {
+    this.kdb = kdb;
   }
 }
