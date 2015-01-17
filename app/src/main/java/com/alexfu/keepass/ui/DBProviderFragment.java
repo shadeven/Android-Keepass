@@ -59,6 +59,6 @@ public class DBProviderFragment extends BaseFragment implements AdapterView.OnIt
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Intent intent = dbProviders.get(position).getFilePickerIntent();
-    startActivityForResult(intent, READ_REQUEST_CODE);
+    getActivity().startActivityForResult(intent, READ_REQUEST_CODE);
   }
 }

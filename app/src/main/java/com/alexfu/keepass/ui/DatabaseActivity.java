@@ -22,6 +22,10 @@ public class DatabaseActivity extends BaseActivity implements DatabaseView {
 
   @Override
   public void showAuthenticationView() {
-    // TODO
+    AuthenticationFragment fragment = AuthenticationFragment.newInstance();
+    getSupportFragmentManager()
+        .beginTransaction()
+        .replace(R.id.fragment_container, fragment)
+        .commit();
   }
 }

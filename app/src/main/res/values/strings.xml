@@ -8,5 +8,8 @@
   <!-- Provider strings -->
   <string name="provider_saf_title">Storage Access Framework</string>
   <string name="provider_saf_description">Access Google Drive, external file browsers, etc…</string>
+  
+  <!-- Hint strings -->
+  <string name="hint_password">Password</string>
 
 </resources>
