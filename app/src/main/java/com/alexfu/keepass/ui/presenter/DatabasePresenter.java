@@ -8,8 +8,14 @@ import com.keepassdroid.database.DatabaseManager;
 import com.keepassdroid.database.KDB;
 import com.keepassdroid.database.exception.InvalidDBException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class DatabasePresenter extends ViewPresenter {
   
@@ -27,17 +33,33 @@ public class DatabasePresenter extends ViewPresenter {
   }
   
   public void authenticate(String password) {
-    try {
-      KDB kdb = openDatabase(password);
-      view.onAuthenticated(kdb);
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (InvalidDBException e) {
-      e.printStackTrace();
-    }
+    openDatabase(password)
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Subscriber<KDB>() {
+          private KDB result;
+          
+          @Override
+          public void onCompleted() {
+            if (result != null) {
+              view.onAuthenticated(result);
+            }
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            e.printStackTrace();
+            // TODO: Show error view            
+          }
+
+          @Override
+          public void onNext(KDB kdb) {
+            result = kdb;
+          }
+        });
   }
   
-  private KDB openDatabase(String password) throws IOException, InvalidDBException {
+  private Observable<KDB> openDatabase(String password) {
     String scheme = kdbUri.getScheme();
     
     if (scheme.equals("content")) {
@@ -47,12 +69,27 @@ public class DatabasePresenter extends ViewPresenter {
     return null;
   }
   
-  private KDB openWithContentResolver(String password) throws IOException, InvalidDBException {
-    ContentResolver resolver = view.getAppContext().getContentResolver();
-    InputStream is = resolver.openInputStream(kdbUri);
-    DatabaseManager dbm = new DatabaseManager();
-    dbm.LoadData(is, password, "");
-    return dbm.kdb;
+  private Observable<KDB> openWithContentResolver(final String password) {
+    return Observable.create(new Observable.OnSubscribe<KDB>() {
+      @Override
+      public void call(Subscriber<? super KDB> subscriber) {
+        ContentResolver resolver = view.getAppContext().getContentResolver();
+        try {
+          InputStream is = resolver.openInputStream(kdbUri);
+          DatabaseManager dbm = new DatabaseManager();
+          dbm.LoadData(is, password, "");
+          
+          subscriber.onNext(dbm.kdb);
+          subscriber.onCompleted();
+        } catch (FileNotFoundException e) {
+          subscriber.onError(e);
+        } catch (InvalidDBException e) {
+          subscriber.onError(e);
+        } catch (IOException e) {
+          subscriber.onError(e);
+        }
+      }
+    });
   }
 
 }
