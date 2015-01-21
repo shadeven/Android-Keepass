@@ -30,14 +30,13 @@ Copyright 2006 Bill Zwicky <billzwicky@users.sourceforge.net>
 
 package com.keepassdroid.database.model;
 
-import com.keepassdroid.database.KDBV3;
-import com.keepassdroid.database.PwDate;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import java.util.Calendar;
+import com.keepassdroid.database.KDBV3;
+
 import java.util.Date;
 import java.util.List;
-
-
 
 /**
  * @author Brian Pellin <bpellin@gmail.com>
@@ -155,4 +154,43 @@ public class GroupV3 extends Group {
 	public String toString() {
 		return name;
 	}
+  
+  /* Parcelable */
+
+  public int describeContents() {
+    return 0;
+  }
+
+  public void writeToParcel(Parcel out, int flags) {
+    super.writeToParcel(out, flags);
+    out.writeInt(groupId);      // ID
+    out.writeInt(level);        // Level
+    out.writeInt(this.flags);   // Flags
+    out.writeLong(tCreation);   // Creation date
+    out.writeLong(tExpire);     // Expire date
+    out.writeLong(tLastAccess); // Last access date
+    out.writeLong(tLastMod);    // Last mod date
+  }
+
+  public static final Parcelable.Creator<GroupV3> CREATOR
+      = new Parcelable.Creator<GroupV3>() {
+    public GroupV3 createFromParcel(Parcel in) {
+      return new GroupV3(in);
+    }
+
+    public GroupV3[] newArray(int size) {
+      return new GroupV3[size];
+    }
+  };
+
+  private GroupV3(Parcel in) {
+    super(in);
+    groupId = in.readInt();
+    level = in.readInt();
+    flags = in.readInt();
+    tCreation = in.readLong();
+    tExpire = in.readLong();
+    tLastAccess = in.readLong();
+    tLastMod = in.readLong();
+  }
 }

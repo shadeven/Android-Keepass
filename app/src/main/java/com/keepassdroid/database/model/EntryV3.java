@@ -43,19 +43,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 package com.keepassdroid.database.model;
 
 // PhoneID
+
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.keepassdroid.database.KDB;
+import com.keepassdroid.database.KDBV3;
+import com.keepassdroid.utils.Types;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
-
-import com.keepassdroid.database.KDB;
-import com.keepassdroid.database.KDBV3;
-import com.keepassdroid.database.PwDate;
-import com.keepassdroid.utils.Types;
 
 
 /**
@@ -97,7 +97,6 @@ public class EntryV3 extends Entry {
 	public String title;
 	public String url;
 	public String additional;
-
 
 	public long             tCreation;
 	public long             tLastMod;
@@ -533,15 +532,20 @@ public class EntryV3 extends Entry {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeByteArray(uuid);        // ID
-    dest.writeByteArray(password);    // Password
-    dest.writeByteArray(binaryData);  // Binary data
-    dest.writeString(username);       // Username
-    dest.writeString(title);          // Title
-    dest.writeString(url);            // URL
-    dest.writeString(additional);     // Additional
-    dest.writeString(binaryDesc);     // Binary description
-    dest.writeInt(groupId);           // Group ID
+    dest.writeByteArray(uuid);            // ID
+    dest.writeByteArray(password);        // Password
+    dest.writeByteArray(binaryData);      // Binary data
+    dest.writeString(username);           // Username
+    dest.writeString(title);              // Title
+    dest.writeString(url);                // URL
+    dest.writeString(additional);         // Additional
+    dest.writeString(binaryDesc);         // Binary description
+    dest.writeInt(groupId);               // Group ID
+    dest.writeLong(tCreation);            // Creation date
+    dest.writeLong(tExpire);              // Expire date
+    dest.writeLong(tLastAccess);          // Last access date
+    dest.writeLong(tLastMod);             // Last mod date
+    dest.writeParcelable(parent, flags);  // Parent
   }
 
   public static final Parcelable.Creator<EntryV3> CREATOR
@@ -556,6 +560,19 @@ public class EntryV3 extends Entry {
   };
 
   private EntryV3(Parcel in) {
-
+    in.readByteArray(uuid);
+    in.readByteArray(password);
+    in.readByteArray(binaryData);
+    username = in.readString();
+    title = in.readString();
+    url = in.readString();
+    additional = in.readString();
+    binaryDesc = in.readString();
+    groupId = in.readInt();
+    tCreation = in.readLong();
+    tExpire = in.readLong();
+    tLastAccess = in.readLong();
+    tLastMod = in.readLong();
+    parent = in.readParcelable(GroupV3.class.getClassLoader());
   }
 }

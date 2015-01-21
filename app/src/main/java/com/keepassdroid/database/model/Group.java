@@ -19,6 +19,9 @@
  */
 package com.keepassdroid.database.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,7 +31,7 @@ import java.util.List;
 import com.keepassdroid.database.*;
 import com.keepassdroid.utils.StrUtil;
 
-public abstract class Group {
+public abstract class Group implements Parcelable {
 	public List<Group> childGroups = new ArrayList<Group>();
 	public List<Entry> childEntries = new ArrayList<Entry>();
 	public String name = "";
@@ -199,4 +202,14 @@ public abstract class Group {
 		return true;
 		
 	}
+  
+  /* Parcelable */
+
+  public void writeToParcel(Parcel out, int flags) {
+    out.writeString(name); // Name
+  }
+
+  protected Group(Parcel in) {
+    name = in.readString();
+  }
 }

@@ -19,9 +19,14 @@
  */
 package com.keepassdroid.database.model;
 
-import com.keepassdroid.database.*;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import java.util.Date;
+import com.keepassdroid.database.ITimeLogger;
+import com.keepassdroid.database.KDBV4;
+import com.keepassdroid.database.PwIcon;
+import com.keepassdroid.database.PwIconCustom;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -195,7 +200,6 @@ public class GroupV4 extends Group implements ITimeLogger {
 	@Override
 	public void setParent(Group prt) {
 		parent = (GroupV4) prt;
-
 	}
 
 	@Override
@@ -221,5 +225,58 @@ public class GroupV4 extends Group implements ITimeLogger {
 		// If we get to the root group and its null, default to true
 		return true;
 	}
+  
+  /* Parcelable */
 
+  public int describeContents() {
+    return 0;
+  }
+
+  public void writeToParcel(Parcel out, int flags) {
+    super.writeToParcel(out, flags);
+    out.writeString(uuid.toString());                 // ID
+    out.writeString(lastTopVisibleEntry.toString());  // Last top visible entry ID
+    out.writeString(notes);                           // Notes
+    out.writeString(defaultAutoTypeSequence);         // Auto type sequence
+    out.writeInt(enableAutoType ? 1 : 0);             // Enable auto type
+    out.writeInt(enableSearching ? 1 : 0);            // Enable search
+    out.writeInt(expires ? 1 : 0);                    // Expires
+    out.writeLong(parentGroupLastMod);                // Parent group last mod date
+    out.writeLong(creation);                          // Creation date
+    out.writeLong(lastMod);                           // Last mod date
+    out.writeLong(lastAccess);                        // Last access date
+    out.writeLong(expireDate);                        // Expire date
+    out.writeLong(usageCount);                        // Usage count
+    out.writeParcelable(parent, flags);               // Parent
+  }
+
+  public static final Parcelable.Creator<GroupV4> CREATOR
+      = new Parcelable.Creator<GroupV4>() {
+    public GroupV4 createFromParcel(Parcel in) {
+      return new GroupV4(in);
+    }
+
+    public GroupV4[] newArray(int size) {
+      return new GroupV4[size];
+    }
+  };
+
+  private GroupV4(Parcel in) {
+    super(in);
+    uuid = UUID.fromString(in.readString());
+    lastTopVisibleEntry = UUID.fromString(in.readString());
+    notes = in.readString();
+    defaultAutoTypeSequence = in.readString();
+    enableAutoType = in.readInt() == 1;
+    enableSearching = in.readInt() == 1;
+    expires = in.readInt() == 1;
+    parentGroupLastMod = in.readLong();
+    creation = in.readLong();
+    lastMod = in.readLong();
+    lastAccess = in.readLong();
+    expireDate = in.readLong();
+    usageCount = in.readLong();
+    parent = in.readParcelable(GroupV4.class.getClassLoader());
+  }
+  
 }
