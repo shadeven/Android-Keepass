@@ -44,21 +44,21 @@ public class GroupAdapter extends BaseAdapter implements SpinnerAdapter {
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
       LayoutInflater inflater = LayoutInflater.from(context);
-      convertView = inflater.inflate(R.layout.single_line_list_item, parent, false);
+      convertView = inflater.inflate(R.layout.spinner_list_item, parent, false);
       convertView.setTag(new ViewHolder(convertView));
     }
     
     Group group = getItem(position);
     ViewHolder viewHolder = (ViewHolder) convertView.getTag();
     
-    viewHolder.name.setText(group.name);
+    viewHolder.title.setText(group.name);
     
     return convertView;
   }
   
   class ViewHolder extends ButterViewHolder {
     
-    @InjectView(R.id.name) TextView name;
+    @InjectView(R.id.title) TextView title;
     
     public ViewHolder(View source) {
       super(source);
