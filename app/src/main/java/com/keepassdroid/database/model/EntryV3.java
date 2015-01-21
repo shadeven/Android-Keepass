@@ -43,6 +43,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 package com.keepassdroid.database.model;
 
 // PhoneID
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
@@ -527,4 +530,31 @@ public class EntryV3 extends Entry {
 	public void setParent(Group parent) {
 		this.parent = (GroupV3) parent;
 	}
+  
+  /* Parcelable */
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeByteArray(uuid); // ID
+  }
+
+  public static final Parcelable.Creator<EntryV3> CREATOR
+      = new Parcelable.Creator<EntryV3>() {
+    public EntryV3 createFromParcel(Parcel in) {
+      return new EntryV3(in);
+    }
+
+    public EntryV3[] newArray(int size) {
+      return new EntryV3[size];
+    }
+  };
+
+  private EntryV3(Parcel in) {
+
+  }
 }

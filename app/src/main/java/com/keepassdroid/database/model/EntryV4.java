@@ -19,6 +19,9 @@
  */
 package com.keepassdroid.database.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.*;
 
 import com.keepassdroid.database.*;
@@ -481,4 +484,31 @@ public class EntryV4 extends Entry implements ITimeLogger {
 		
 		return GroupV4.DEFAULT_SEARCHING_ENABLED;
 	}
+  
+  /* Parcelable */
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(uuid.toString()); // ID
+  }
+
+  public static final Parcelable.Creator<EntryV4> CREATOR
+      = new Parcelable.Creator<EntryV4>() {
+    public EntryV4 createFromParcel(Parcel in) {
+      return new EntryV4(in);
+    }
+
+    public EntryV4[] newArray(int size) {
+      return new EntryV4[size];
+    }
+  };
+
+  private EntryV4(Parcel in) {
+    
+  }
 }

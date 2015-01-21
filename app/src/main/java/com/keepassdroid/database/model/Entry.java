@@ -19,6 +19,8 @@
  */
 package com.keepassdroid.database.model;
 
+import android.os.Parcelable;
+
 import java.util.Comparator;
 import java.util.Date;
 import java.util.UUID;
@@ -28,7 +30,7 @@ import com.keepassdroid.database.PwIcon;
 import com.keepassdroid.database.PwIconStandard;
 import com.keepassdroid.database.iterator.EntrySearchStringIterator;
 
-public abstract class Entry implements Cloneable {
+public abstract class Entry implements Cloneable, Parcelable {
 
   protected static final String PMS_TAN_ENTRY = "<TAN>";
 
