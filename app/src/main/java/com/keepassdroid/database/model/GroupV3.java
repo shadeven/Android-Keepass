@@ -57,10 +57,10 @@ public class GroupV3 extends Group {
 
 	public int groupId;
 
-	public PwDate tCreation;
-	public PwDate tLastMod;
-	public PwDate tLastAccess;
-	public PwDate tExpire;
+	public long tCreation;
+	public long tLastMod;
+	public long tLastAccess;
+	public long tExpire;
 
 	public int level; // short
 
@@ -73,11 +73,11 @@ public class GroupV3 extends Group {
 
 	public GroupV3(String name, String id) {
 		super(name, id);
-		Date now = Calendar.getInstance().getTime();
-		tCreation = new PwDate(now);
-		tLastAccess = new PwDate(now);
-		tLastMod = new PwDate(now);
-		tExpire = new PwDate(GroupV3.NEVER_EXPIRE);
+		long now = System.currentTimeMillis();
+		tCreation = now;
+		tLastAccess = now;
+		tLastMod = now;
+		tExpire = NEVER_EXPIRE.getTime();
 	}
 
 	public void setGroups(List<Group> groups) {
@@ -105,8 +105,8 @@ public class GroupV3 extends Group {
 	}
 
 	@Override
-	public Date getLastMod() {
-		return tLastMod.getJDate();
+	public long getLastMod() {
+		return tLastMod;
 	}
 
 	@Override
@@ -124,31 +124,31 @@ public class GroupV3 extends Group {
 			name = "";
 		}
 		
-		if (tCreation == null) {
-			tCreation = EntryV3.DEFAULT_PWDATE;
+		if (tCreation == 0) {
+			tCreation = EntryV3.DEFAULT_DATE.getTime();
 		}
 		
-		if (tLastMod == null) {
-			tLastMod = EntryV3.DEFAULT_PWDATE;
+		if (tLastMod == 0) {
+			tLastMod = EntryV3.DEFAULT_DATE.getTime();
 		}
 		
-		if (tLastAccess == null) {
-			tLastAccess = EntryV3.DEFAULT_PWDATE;
+		if (tLastAccess == 0) {
+			tLastAccess = EntryV3.DEFAULT_DATE.getTime();
 		}
 		
-		if (tExpire == null) {
-			tExpire = EntryV3.DEFAULT_PWDATE;
+		if (tExpire == 0) {
+			tExpire = EntryV3.DEFAULT_DATE.getTime();
 		}
 	}
 
 	@Override
-	public void setLastAccessTime(Date date) {
-		tLastAccess = new PwDate(date);
+	public void setLastAccessTime(long date) {
+		tLastAccess = date;
 	}
 
 	@Override
-	public void setLastModificationTime(Date date) {
-		tLastMod = new PwDate(date);
+	public void setLastModificationTime(long date) {
+		tLastMod = date;
 	}
 	
 	@Override

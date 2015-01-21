@@ -47,11 +47,11 @@ public class EntryV4 extends Entry implements ITimeLogger {
 	public AutoType autoType = new AutoType();
 	public ArrayList<EntryV4> history = new ArrayList<EntryV4>();
 	
-	private Date parentGroupLastMod = KDBV4.DEFAULT_NOW;
-	private Date creation = KDBV4.DEFAULT_NOW;
-	private Date lastMod = KDBV4.DEFAULT_NOW;
-	private Date lastAccess = KDBV4.DEFAULT_NOW;
-	private Date expireDate = KDBV4.DEFAULT_NOW;
+	private long parentGroupLastMod = System.currentTimeMillis();
+	private long creation = System.currentTimeMillis();
+	private long lastMod = System.currentTimeMillis();
+	private long lastAccess = System.currentTimeMillis();
+	private long expireDate = System.currentTimeMillis();
 	private boolean expires = false;
 	private long usageCount = 0;
 	public String url = "";
@@ -110,8 +110,7 @@ public class EntryV4 extends Entry implements ITimeLogger {
 		}
 		
 		if (initDates) {
-			Calendar cal = Calendar.getInstance();
-			Date now = cal.getTime();
+			long now = System.currentTimeMillis();
 			creation = now;
 			lastAccess = now;
 			lastMod = now;
@@ -217,22 +216,22 @@ public class EntryV4 extends Entry implements ITimeLogger {
 	}
 
 	@Override
-	public Date getLastAccessTime() {
+	public long getLastAccessTime() {
 		return lastAccess;
 	}
 
 	@Override
-	public Date getCreationTime() {
+	public long getCreationTime() {
 		return creation;
 	}
 
 	@Override
-	public Date getExpiryTime() {
+	public long getExpiryTime() {
 		return expireDate;
 	}
 
 	@Override
-	public Date getLastModificationTime() {
+	public long getLastModificationTime() {
 		return lastMod;
 	}
 
@@ -276,19 +275,19 @@ public class EntryV4 extends Entry implements ITimeLogger {
 		setString(STR_NOTES, notes, protect);
 	}
 
-	public void setCreationTime(Date date) {
+	public void setCreationTime(long date) {
 		creation = date;
 	}
 
-	public void setExpiryTime(Date date) {
+	public void setExpiryTime(long date) {
 		expireDate = date;
 	}
 
-	public void setLastAccessTime(Date date) {
+	public void setLastAccessTime(long date) {
 		lastAccess = date;
 	}
 
-	public void setLastModificationTime(Date date) {
+	public void setLastModificationTime(long date) {
 		lastMod = date;
 	}
 
@@ -321,7 +320,7 @@ public class EntryV4 extends Entry implements ITimeLogger {
 		strings.put(key, ps);
 	}
 
-	public Date getLocationChanged() {
+	public long getLocationChanged() {
 		return parentGroupLastMod;
 	}
 
@@ -329,7 +328,7 @@ public class EntryV4 extends Entry implements ITimeLogger {
 		return usageCount;
 	}
 
-	public void setLocationChanged(Date date) {
+	public void setLocationChanged(long date) {
 		parentGroupLastMod = date;
 	}
 
@@ -412,13 +411,13 @@ public class EntryV4 extends Entry implements ITimeLogger {
 	}
 	
 	private void removeOldestBackup() {
-		Date min = null;
+		long min = 0;
 		int index = -1;
 		
 		for (int i = 0; i < history.size(); i++) {
 			Entry entry = history.get(i);
-			Date lastMod = entry.getLastModificationTime();
-			if ((min == null) || lastMod.before(min)) {
+      long lastMod = entry.getLastModificationTime();
+			if ((min == 0) || (lastMod < min)) {
 				index = i;
 				min = lastMod;
 			}
@@ -469,7 +468,7 @@ public class EntryV4 extends Entry implements ITimeLogger {
 
 	@Override
 	public void touchLocation() {
-		parentGroupLastMod = new Date();
+		parentGroupLastMod = System.currentTimeMillis();
 	}
 	
 	@Override

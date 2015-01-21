@@ -49,7 +49,7 @@ public abstract class Group {
 
 	public abstract String getName();
 	
-	public abstract Date getLastMod();
+	public abstract long getLastMod();
 	
 	public PwIcon getIcon() {
 		return icon;
@@ -67,9 +67,9 @@ public abstract class Group {
 		
 	}
 	
-	public abstract void setLastAccessTime(Date date);
+	public abstract void setLastAccessTime(long date);
 
-	public abstract void setLastModificationTime(Date date);
+	public abstract void setLastModificationTime(long date);
 	
 	public void sortEntriesByName() {
 		Collections.sort(childEntries, new Entry.EntryNameComparator());
@@ -89,7 +89,7 @@ public abstract class Group {
 	}
 	
 	public void touch(boolean modified, boolean touchParents) {
-		Date now = new Date();
+		long now = System.currentTimeMillis();
 		
 		setLastAccessTime(now);
 		

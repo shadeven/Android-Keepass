@@ -27,12 +27,12 @@ import java.util.List;
 public class EntrySearchHandlerAll extends EntryHandler<Entry> {
 	private List<Entry> listStorage;
 	private SearchParameters sp;
-	private Date now;
+	private long now;
 	
 	public EntrySearchHandlerAll(SearchParameters sp, List<Entry> listStorage) {
 		this.sp = sp;
 		this.listStorage = listStorage;
-		now = new Date();
+		now = System.currentTimeMillis();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class EntrySearchHandlerAll extends EntryHandler<Entry> {
 			return true;
 		}
 		
-		if (sp.excludeExpired && entry.expires() && now.after(entry.getExpiryTime())) {
+		if (sp.excludeExpired && entry.expires() && now > entry.getExpiryTime()) {
 			return true;
 		}
 		

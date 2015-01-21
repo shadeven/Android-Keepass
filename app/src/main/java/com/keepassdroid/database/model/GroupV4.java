@@ -29,7 +29,7 @@ public class GroupV4 extends Group implements ITimeLogger {
 
 	//public static final int FOLDER_ICON = 48;
 	public static final boolean DEFAULT_SEARCHING_ENABLED = true;
-	
+
 	public GroupV4 parent = null;
 	public UUID uuid = KDBV4.UUID_ZERO;
 	public String notes = "";
@@ -39,11 +39,11 @@ public class GroupV4 extends Group implements ITimeLogger {
 	public Boolean enableAutoType = null;
 	public Boolean enableSearching = null;
 	public UUID lastTopVisibleEntry = KDBV4.UUID_ZERO;
-	private Date parentGroupLastMod = KDBV4.DEFAULT_NOW;
-	private Date creation = KDBV4.DEFAULT_NOW;
-	private Date lastMod = KDBV4.DEFAULT_NOW;
-	private Date lastAccess = KDBV4.DEFAULT_NOW;
-	private Date expireDate = KDBV4.DEFAULT_NOW;
+	private long parentGroupLastMod = System.currentTimeMillis();
+	private long creation = System.currentTimeMillis();
+	private long lastMod = System.currentTimeMillis();
+	private long lastAccess = System.currentTimeMillis();
+	private long expireDate = System.currentTimeMillis();
 	private boolean expires = false;
 	private long usageCount = 0;
 
@@ -54,50 +54,50 @@ public class GroupV4 extends Group implements ITimeLogger {
 	public GroupV4(String name, String id) {
 		super(name, id);
 		uuid = UUID.fromString(id);
-		creation = lastMod = lastAccess = new Date();
+		creation = lastMod = lastAccess = System.currentTimeMillis();
 	}
 
 	public void AddGroup(GroupV4 subGroup, boolean takeOwnership) {
 		AddGroup(subGroup, takeOwnership, false);
 	}
-	
+
 	public void AddGroup(GroupV4 subGroup, boolean takeOwnership, boolean updateLocationChanged) {
 		if ( subGroup == null ) throw new RuntimeException("subGroup");
-		
+
 		childGroups.add(subGroup);
-		
+
 		if ( takeOwnership ) subGroup.parent = this;
-		
-		if ( updateLocationChanged ) subGroup.parentGroupLastMod = new Date(System.currentTimeMillis());
-		
+
+		if ( updateLocationChanged ) subGroup.parentGroupLastMod = System.currentTimeMillis();
+
 	}
-	
+
 	public void AddEntry(EntryV4 pe, boolean takeOwnership) {
 		AddEntry(pe, takeOwnership, false);
 	}
-	
+
 	public void AddEntry(EntryV4 pe, boolean takeOwnership, boolean updateLocationChanged) {
 		assert(pe != null);
-		
+
 		childEntries.add(pe);
-		
+
 		if ( takeOwnership ) pe.parent = this;
-		
-		if ( updateLocationChanged ) pe.setLocationChanged(new Date(System.currentTimeMillis()));
+
+		if ( updateLocationChanged ) pe.setLocationChanged(System.currentTimeMillis());
 	}
-	
+
 	@Override
 	public Group getParent() {
 		return parent;
 	}
-	
+
 	public void buildChildGroupsRecursive(List<Group> list) {
 		list.add(this);
-		
+
 		for ( int i = 0; i < childGroups.size(); i++) {
 			GroupV4 child = (GroupV4) childGroups.get(i);
 			child.buildChildGroupsRecursive(list);
-			
+
 		}
 	}
 
@@ -105,12 +105,12 @@ public class GroupV4 extends Group implements ITimeLogger {
 		for ( int i = 0; i < childEntries.size(); i++ ) {
 			list.add(childEntries.get(i));
 		}
-		
+
 		for ( int i = 0; i < childGroups.size(); i++ ) {
 			GroupV4 child = (GroupV4) childGroups.get(i);
 			child.buildChildEntriesRecursive(list);
 		}
-		
+
 	}
 
 	@Override
@@ -129,27 +129,27 @@ public class GroupV4 extends Group implements ITimeLogger {
 	}
 
 	@Override
-	public Date getLastMod() {
+	public long getLastMod() {
 		return parentGroupLastMod;
 	}
 
-	public Date getCreationTime() {
+	public long getCreationTime() {
 		return creation;
 	}
 
-	public Date getExpiryTime() {
+	public long getExpiryTime() {
 		return expireDate;
 	}
 
-	public Date getLastAccessTime() {
+	public long getLastAccessTime() {
 		return lastAccess;
 	}
 
-	public Date getLastModificationTime() {
+	public long getLastModificationTime() {
 		return lastMod;
 	}
 
-	public Date getLocationChanged() {
+	public long getLocationChanged() {
 		return parentGroupLastMod;
 	}
 
@@ -157,26 +157,26 @@ public class GroupV4 extends Group implements ITimeLogger {
 		return usageCount;
 	}
 
-	public void setCreationTime(Date date) {
+	public void setCreationTime(long date) {
 		creation = date;
-		
+
 	}
 
-	public void setExpiryTime(Date date) {
+	public void setExpiryTime(long date) {
 		expireDate = date;
 	}
 
 	@Override
-	public void setLastAccessTime(Date date) {
+	public void setLastAccessTime(long date) {
 		lastAccess = date;
 	}
 
 	@Override
-	public void setLastModificationTime(Date date) {
+	public void setLastModificationTime(long date) {
 		lastMod = date;
 	}
 
-	public void setLocationChanged(Date date) {
+	public void setLocationChanged(long date) {
 		parentGroupLastMod = date;
 	}
 
@@ -195,7 +195,7 @@ public class GroupV4 extends Group implements ITimeLogger {
 	@Override
 	public void setParent(Group prt) {
 		parent = (GroupV4) prt;
-		
+
 	}
 
 	@Override
@@ -206,7 +206,7 @@ public class GroupV4 extends Group implements ITimeLogger {
 			return customIcon;
 		}
 	}
-	
+
 	public boolean isSearchEnabled() {
 		GroupV4 group = this;
 		while (group != null) {
@@ -214,10 +214,10 @@ public class GroupV4 extends Group implements ITimeLogger {
 			if (search != null) {
 				return search;
 			}
-			
+
 			group = group.parent;
 		}
-		
+
 		// If we get to the root group and its null, default to true
 		return true;
 	}

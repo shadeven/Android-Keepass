@@ -81,6 +81,7 @@ import com.keepassdroid.database.exception.InvalidPasswordException;
 import com.keepassdroid.stream.LEDataInputStream;
 import com.keepassdroid.stream.LEDataOutputStream;
 import com.keepassdroid.stream.NullOutputStream;
+import com.keepassdroid.utils.DateUtils;
 import com.keepassdroid.utils.Types;
 
 /**
@@ -333,16 +334,16 @@ public class ImporterV3 extends Importer {
         grp.name = Types.readCString(buf, offset);
         break;
       case 0x0003:
-        grp.tCreation = new PwDate(buf, offset);
+        grp.tCreation = DateUtils.getTimeInMillis(buf, offset);
         break;
       case 0x0004:
-        grp.tLastMod = new PwDate(buf, offset);
+        grp.tLastMod = DateUtils.getTimeInMillis(buf, offset);
         break;
       case 0x0005:
-        grp.tLastAccess = new PwDate(buf, offset);
+        grp.tLastAccess = DateUtils.getTimeInMillis(buf, offset);
         break;
       case 0x0006:
-        grp.tExpire = new PwDate(buf, offset);
+        grp.tExpire = DateUtils.getTimeInMillis(buf, offset);
         break;
       case 0x0007:
         grp.icon = db.iconFactory.getIcon(LEDataInputStream.readInt(buf, offset));
@@ -398,16 +399,16 @@ public class ImporterV3 extends Importer {
         ent.additional = Types.readCString(buf, offset);
         break;
       case 0x0009:
-        ent.tCreation = new PwDate(buf, offset);
+        ent.tCreation = DateUtils.getTimeInMillis(buf, offset);
         break;
       case 0x000A:
-        ent.tLastMod = new PwDate(buf, offset);
+        ent.tLastMod = DateUtils.getTimeInMillis(buf, offset);
         break;
       case 0x000B:
-        ent.tLastAccess = new PwDate(buf, offset);
+        ent.tLastAccess = DateUtils.getTimeInMillis(buf, offset);
         break;
       case 0x000C:
-        ent.tExpire = new PwDate(buf, offset);
+        ent.tExpire = DateUtils.getTimeInMillis(buf, offset);
         break;
       case 0x000D:
         ent.binaryDesc = Types.readCString(buf, offset);

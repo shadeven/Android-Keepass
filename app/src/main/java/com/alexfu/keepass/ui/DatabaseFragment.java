@@ -22,7 +22,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class DatabaseFragment extends BaseFragment {
+public class DatabaseFragment extends BaseFragment implements AdapterView.OnItemClickListener {
   
   @InjectView(android.R.id.list) ListView listView;
   private Spinner spinner;
@@ -80,9 +80,15 @@ public class DatabaseFragment extends BaseFragment {
     List<Entry> entries = spinnerAdapter.getItem(selectedGroupIndex).childEntries;
     listAdapter = new EntryAdapter(getActivity(), entries);
     listView.setAdapter(listAdapter);
+    listView.setOnItemClickListener(this);
   }
 
   public void setDatabase(KDB kdb) {
     this.kdb = kdb;
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    // TODO: Launch entry details
   }
 }
