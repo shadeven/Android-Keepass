@@ -4,17 +4,12 @@ import android.content.ContentResolver;
 import android.net.Uri;
 
 import com.alexfu.keepass.ui.view.DatabaseView;
+import com.keepassdroid.database.DatabaseManager;
+import com.keepassdroid.database.KDB;
+import com.keepassdroid.database.exception.InvalidDBException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
-import pl.sind.keepass.exceptions.KeePassDataBaseException;
-import pl.sind.keepass.exceptions.UnsupportedDataBaseException;
-import pl.sind.keepass.kdb.KeePassDataBase;
-import pl.sind.keepass.kdb.KeePassDataBaseManager;
-import pl.sind.keepass.kdb.v1.KeePassDataBaseV1;
 
 public class DatabasePresenter extends ViewPresenter {
   
@@ -33,17 +28,16 @@ public class DatabasePresenter extends ViewPresenter {
   
   public void authenticate(String password) {
     try {
-      KeePassDataBase kdb = openDatabase(password);
+      KDB kdb = openDatabase(password);
       view.onAuthenticated(kdb);
     } catch (IOException e) {
       e.printStackTrace();
-    } catch (KeePassDataBaseException e) {
+    } catch (InvalidDBException e) {
       e.printStackTrace();
     }
   }
   
-  private KeePassDataBase openDatabase(String password) throws IOException,
-      KeePassDataBaseException {
+  private KDB openDatabase(String password) throws IOException, InvalidDBException {
     String scheme = kdbUri.getScheme();
     
     if (scheme.equals("content")) {
@@ -53,11 +47,12 @@ public class DatabasePresenter extends ViewPresenter {
     return null;
   }
   
-  private KeePassDataBase openWithContentResolver(String password) throws KeePassDataBaseException, 
-      IOException {
+  private KDB openWithContentResolver(String password) throws IOException, InvalidDBException {
     ContentResolver resolver = view.getAppContext().getContentResolver();
     InputStream is = resolver.openInputStream(kdbUri);
-    return KeePassDataBaseManager.openDataBase(is, null, password);
+    DatabaseManager dbm = new DatabaseManager();
+    dbm.LoadData(is, password, "");
+    return dbm.kdb;
   }
 
 }

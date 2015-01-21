@@ -7,15 +7,13 @@ import android.os.Bundle;
 import com.alexfu.keepass.R;
 import com.alexfu.keepass.ui.presenter.DatabasePresenter;
 import com.alexfu.keepass.ui.view.DatabaseView;
-
-import pl.sind.keepass.kdb.KeePassDataBase;
-import pl.sind.keepass.kdb.v1.KeePassDataBaseV1;
+import com.keepassdroid.database.KDB;
 
 public class DatabaseActivity extends BaseActivity implements DatabaseView, 
     AuthenticationFragment.Callback {
   
   private DatabasePresenter presenter;
-  private KeePassDataBaseV1 kdb;
+  private KDB kdb;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +40,8 @@ public class DatabaseActivity extends BaseActivity implements DatabaseView,
   }
 
   @Override
-  public void onAuthenticated(KeePassDataBase kdb) {
-    this.kdb = (KeePassDataBaseV1) kdb;
+  public void onAuthenticated(KDB kdb) {
+    this.kdb = kdb;
     DatabaseFragment fragment = DatabaseFragment.newInstance();
     fragment.setDatabase(this.kdb);
     getSupportFragmentManager()
