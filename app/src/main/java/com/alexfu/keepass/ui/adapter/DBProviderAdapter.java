@@ -46,7 +46,7 @@ public class DBProviderAdapter extends BaseAdapter {
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
       LayoutInflater inflater = LayoutInflater.from(context);
-      convertView = inflater.inflate(R.layout.list_item_two_line, parent, false);
+      convertView = inflater.inflate(R.layout.double_line_list_item, parent, false);
 
       DBProviderViewHolder viewHolder = new DBProviderViewHolder(convertView);
       convertView.setTag(viewHolder);

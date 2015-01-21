@@ -45,7 +45,7 @@ public class EntryAdapter extends BaseAdapter implements SpinnerAdapter {
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
       LayoutInflater inflater = LayoutInflater.from(context);
-      convertView = inflater.inflate(R.layout.partial_simple_list_item, parent, false);
+      convertView = inflater.inflate(R.layout.single_line_list_item, parent, false);
       convertView.setTag(new ViewHolder(convertView));
     }
 
