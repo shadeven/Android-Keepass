@@ -43,6 +43,15 @@
         android:inputType="textPassword"
         android:hint="@string/hint_password"/>
 
+      <com.alexfu.keepass.ui.widget.CheckableImageButton
+        android:id="@+id/button_password_visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:src="@drawable/ic_password_visibility"
+        android:background="?selectableItemBackgroundBorderless"/>
+
     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
     <!-- URL -->
@@ -58,6 +67,15 @@
         android:layout_height="wrap_content"
         android:inputType="textUri"
         android:hint="@string/hint_url"/>
+
+      <ImageButton
+        android:id="@+id/button_launch_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:src="@drawable/ic_action_launch"
+        android:background="?selectableItemBackgroundBorderless"/>
 
     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -107,7 +125,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:enabled="false"
-        android:hint="@string/hint_expires"/>
+        android:hint="@string/hint_expires"/>     
 
     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 

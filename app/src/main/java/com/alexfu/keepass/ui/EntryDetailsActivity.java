@@ -1,10 +1,17 @@
 package com.alexfu.keepass.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
+import android.text.method.SingleLineTransformationMethod;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.alexfu.keepass.R;
+import com.alexfu.keepass.ui.widget.CheckableImageButton;
 import com.keepassdroid.database.model.Entry;
 import com.keepassdroid.utils.DateUtils;
 
@@ -23,6 +30,8 @@ public class EntryDetailsActivity extends BaseActivity {
   @InjectView(R.id.edit_created) EditText createdEditText;
   @InjectView(R.id.edit_modified) EditText modifiedEditText;
   @InjectView(R.id.edit_expires) EditText expiresEditText;
+  @InjectView(R.id.button_launch_url) ImageButton launchUrlButton;
+  @InjectView(R.id.button_password_visibility) CheckableImageButton togglePasswordVisibility;
 
   private Entry entry;
   
@@ -43,6 +52,30 @@ public class EntryDetailsActivity extends BaseActivity {
     createdEditText.setText(sdf.format(new Date(entry.getCreationTime())));
     modifiedEditText.setText(sdf.format(new Date(entry.getLastModificationTime())));
     expiresEditText.setText(sdf.format(new Date(entry.getExpiryTime())));
+    
+    launchUrlButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(entry.getUrl());
+        if (uri.getScheme() == null) {
+          uri = uri.buildUpon().scheme("http").build();
+        }
+        intent.setData(uri);
+        startActivity(intent);
+      }
+    });
+    
+    togglePasswordVisibility.setOnCheckedChangeListener(new CheckableImageButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CheckableImageButton button, boolean isChecked) {
+        if (isChecked) {
+          passwordEditText.setTransformationMethod(new SingleLineTransformationMethod());
+        } else {
+          passwordEditText.setTransformationMethod(new PasswordTransformationMethod());
+        }
+      }
+    });
   }
 
   @Override
