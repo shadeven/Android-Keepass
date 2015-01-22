@@ -49,6 +49,9 @@ public class EntryDetailsActivity extends BaseActivity {
   protected void onResume() {
     super.onResume();
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    if (entry.getTitle() != null && !entry.getTitle().isEmpty()) {
+      getSupportActionBar().setTitle(entry.getTitle());
+    }
   }
 
   @Override
