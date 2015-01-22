@@ -532,8 +532,11 @@ public class EntryV3 extends Entry {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeByteArray(uuid);            // ID
+    dest.writeInt(uuid.length);           // ID length
+    dest.writeByteArray(uuid);            // ID    
+    dest.writeInt(password.length);       // Password length
     dest.writeByteArray(password);        // Password
+    dest.writeInt(binaryData.length);     // Binary data length
     dest.writeByteArray(binaryData);      // Binary data
     dest.writeString(username);           // Username
     dest.writeString(title);              // Title
@@ -559,10 +562,10 @@ public class EntryV3 extends Entry {
     }
   };
 
-  private EntryV3(Parcel in) {
-    in.readByteArray(uuid);
-    in.readByteArray(password);
-    in.readByteArray(binaryData);
+  private EntryV3(Parcel in) {    
+    in.readByteArray(uuid = new byte[in.readInt()]);
+    in.readByteArray(password = new byte[in.readInt()]);
+    in.readByteArray(binaryData = new byte[in.readInt()]);
     username = in.readString();
     title = in.readString();
     url = in.readString();
