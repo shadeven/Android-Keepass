@@ -42,8 +42,7 @@ public class DatabaseFragment extends BaseFragment implements AdapterView.OnItem
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    getSupportActionBar().setTitle("");
+    super.onCreate(savedInstanceState);    
     
     if (kdb == null) return;
 
@@ -62,6 +61,12 @@ public class DatabaseFragment extends BaseFragment implements AdapterView.OnItem
 
     spinnerAdapter = new GroupAdapter(getSupportActionBar().getThemedContext(), kdb.getGroups());
     spinner.setAdapter(spinnerAdapter);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    getSupportActionBar().setTitle("");
   }
 
   @Override
