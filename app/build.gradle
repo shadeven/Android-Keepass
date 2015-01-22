@@ -26,5 +26,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.jakewharton:butterknife:6.0.0'
     compile 'io.reactivex:rxandroid:0.23.0'
+    compile 'com.wrapp.floatlabelededittext:library:0.0.6'
     // compile 'org.bouncycastle:bcprov-jdk15:1.46'
 }

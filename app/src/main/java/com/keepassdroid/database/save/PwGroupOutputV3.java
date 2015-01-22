@@ -25,6 +25,7 @@ import java.io.OutputStream;
 
 import com.keepassdroid.database.model.GroupV3;
 import com.keepassdroid.stream.LEDataOutputStream;
+import com.keepassdroid.utils.DateUtils;
 import com.keepassdroid.utils.Types;
 
 public class PwGroupOutputV3 {
@@ -74,22 +75,22 @@ public class PwGroupOutputV3 {
 		// Create date
 		mOS.write(CREATE_FIELD_TYPE);
 		mOS.write(DATE_FIELD_SIZE);
-		mOS.write(mPG.tCreation.getCDate());
+		mOS.write(DateUtils.millisecondsToBytes(mPG.tCreation));
 		
 		// Modification date
 		mOS.write(MOD_FIELD_TYPE);
 		mOS.write(DATE_FIELD_SIZE);
-		mOS.write(mPG.tLastMod.getCDate());
+		mOS.write(DateUtils.millisecondsToBytes(mPG.tLastMod));
 		
 		// Access date
 		mOS.write(ACCESS_FIELD_TYPE);
 		mOS.write(DATE_FIELD_SIZE);
-		mOS.write(mPG.tLastAccess.getCDate());
+		mOS.write(DateUtils.millisecondsToBytes(mPG.tLastAccess));
 		
 		// Expiration date
 		mOS.write(EXPIRE_FIELD_TYPE);
 		mOS.write(DATE_FIELD_SIZE);
-		mOS.write(mPG.tExpire.getCDate());
+		mOS.write(DateUtils.millisecondsToBytes(mPG.tExpire));
 		
 		// Image ID
 		mOS.write(IMAGEID_FIELD_TYPE);

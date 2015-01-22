@@ -43,16 +43,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 package com.keepassdroid.database.model;
 
 // PhoneID
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.keepassdroid.database.KDB;
+import com.keepassdroid.database.KDBV3;
+import com.keepassdroid.utils.Types;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
-
-import com.keepassdroid.database.KDB;
-import com.keepassdroid.database.KDBV3;
-import com.keepassdroid.database.PwDate;
-import com.keepassdroid.utils.Types;
 
 
 /**
@@ -80,9 +83,6 @@ public class EntryV3 extends Entry {
 	public static final Date NEVER_EXPIRE = getNeverExpire();
 	public static final Date NEVER_EXPIRE_BUG = getNeverExpireBug();
 	public static final Date DEFAULT_DATE = getDefaultDate();
-	public static final PwDate PW_NEVER_EXPIRE = new PwDate(NEVER_EXPIRE);
-	public static final PwDate PW_NEVER_EXPIRE_BUG = new PwDate(NEVER_EXPIRE_BUG);
-	public static final PwDate DEFAULT_PWDATE = new PwDate(DEFAULT_DATE);
 
 	/** Size of byte buffer needed to hold this struct. */
 	public static final String PMS_ID_BINDESC = "bin-stream";
@@ -98,15 +98,17 @@ public class EntryV3 extends Entry {
 	public String url;
 	public String additional;
 
-
-	public PwDate             tCreation;
-	public PwDate             tLastMod;
-	public PwDate             tLastAccess;
-	public PwDate             tExpire;
+	public long             tCreation;
+	public long             tLastMod;
+	public long             tLastAccess;
+	public long             tExpire;
 
 	/** A string describing what is in pBinaryData */
 	public String           binaryDesc;
 	private byte[]          binaryData;
+
+  // for tree traversing
+  public GroupV3 parent = null;
 
 	private static Date getDefaultDate() {
 		Calendar cal = Calendar.getInstance();
@@ -150,12 +152,9 @@ public class EntryV3 extends Entry {
 		return cal.getTime();
 	}
 
-	public static boolean IsNever(Date date) {
-		return PwDate.IsSameDate(NEVER_EXPIRE, date);
+	public static boolean IsNever(long date) {
+		return NEVER_EXPIRE.getTime() == date;
 	}
-	
-	// for tree traversing
-	public GroupV3 parent = null;
 
 
 	public EntryV3() {
@@ -184,12 +183,11 @@ public class EntryV3 extends Entry {
 		}
 		
 		if (initDates) {
-			Calendar cal = Calendar.getInstance();
-			Date now = cal.getTime();
-			tCreation = new PwDate(now);
-			tLastAccess = new PwDate(now);
-			tLastMod = new PwDate(now);
-			tExpire = new PwDate(NEVER_EXPIRE);
+			long now = System.currentTimeMillis();
+			tCreation = now;
+			tLastAccess = now;
+			tLastMod = now;
+			tExpire = NEVER_EXPIRE.getTime();
 		}
 
 	}
@@ -253,8 +251,6 @@ public class EntryV3 extends Entry {
 		return binaryData;
 	}
 
-
-
 	/** Securely erase old data before copying new. */
 	public void setBinaryData( byte[] buf, int offset, int len ) {
 		if( binaryData != null ) {
@@ -281,7 +277,6 @@ public class EntryV3 extends Entry {
 
 		return true;
 	}
-
 	
 	@Override
 	public void assign(Entry source) {
@@ -309,10 +304,10 @@ public class EntryV3 extends Entry {
 		password = new byte[passLen]; 
 		System.arraycopy(source.password, 0, password, 0, passLen);
 
-		tCreation = (PwDate) source.tCreation.clone();
-		tLastMod = (PwDate) source.tLastMod.clone();
-		tLastAccess = (PwDate) source.tLastAccess.clone();
-		tExpire = (PwDate) source.tExpire.clone();
+		tCreation = source.tCreation;
+		tLastMod = source.tLastMod;
+		tLastAccess = source.tLastAccess;
+		tExpire = source.tExpire;
 
 		binaryDesc = source.binaryDesc;
 
@@ -336,10 +331,10 @@ public class EntryV3 extends Entry {
 			System.arraycopy(password, 0, newEntry.password, 0, passLen);
 		}
 
-		newEntry.tCreation = (PwDate) tCreation.clone();
-		newEntry.tLastMod = (PwDate) tLastMod.clone();
-		newEntry.tLastAccess = (PwDate) tLastAccess.clone();
-		newEntry.tExpire = (PwDate) tExpire.clone();
+		newEntry.tCreation = tCreation;
+		newEntry.tLastMod = tLastMod;
+		newEntry.tLastAccess = tLastAccess;
+		newEntry.tExpire = tExpire;
 		
 		newEntry.binaryDesc = binaryDesc;
 
@@ -356,53 +351,53 @@ public class EntryV3 extends Entry {
 	}
 
 	@Override
-	public Date getLastAccessTime() {
-		return tLastAccess.getJDate();
+	public long getLastAccessTime() {
+		return tLastAccess;
 	}
 
 	@Override
-	public Date getCreationTime() {
-		return tCreation.getJDate();
+	public long getCreationTime() {
+		return tCreation;
 	}
 
 	@Override
-	public Date getExpiryTime() {
-		return tExpire.getJDate();
+	public long getExpiryTime() {
+		return tExpire;
 	}
 
 	@Override
-	public Date getLastModificationTime() {
-		return tLastMod.getJDate();
+	public long getLastModificationTime() {
+		return tLastMod;
 	}
 
 	@Override
-	public void setCreationTime(Date create) {
-		tCreation = new PwDate(create);
+	public void setCreationTime(long create) {
+		tCreation = create;
 		
 	}
 
 	@Override
-	public void setLastModificationTime(Date mod) {
-		tLastMod = new PwDate(mod);
+	public void setLastModificationTime(long mod) {
+		tLastMod = mod;
 		
 	}
 
 	@Override
-	public void setLastAccessTime(Date access) {
-		tLastAccess = new PwDate(access);
+	public void setLastAccessTime(long access) {
+		tLastAccess = access;
 		
 	}
 
 	@Override
 	public void setExpires(boolean expires) {
 		if (!expires) {
-			tExpire = PW_NEVER_EXPIRE;
+			tExpire = NEVER_EXPIRE.getTime();
 		}
 	}
 
 	@Override
-	public void setExpiryTime(Date expires) {
-		tExpire = new PwDate(expires);
+	public void setExpiryTime(long expires) {
+		tExpire = expires;
 	}
 
 	@Override
@@ -466,7 +461,7 @@ public class EntryV3 extends Entry {
 
 	@Override
 	public boolean expires() {
-		return ! IsNever(tExpire.getJDate());
+		return ! IsNever(tExpire);
 	}
 	
 	public void populateBlankFields(KDBV3 db) {
@@ -498,20 +493,20 @@ public class EntryV3 extends Entry {
 			additional = "";
 		}
 		
-		if (tCreation == null) {
-			tCreation = DEFAULT_PWDATE;
+		if (tCreation == 0) {
+			tCreation = DEFAULT_DATE.getTime();
 		}
 		
-		if (tLastMod == null) {
-			tLastMod = DEFAULT_PWDATE;
+		if (tLastMod == 0) {
+			tLastMod = DEFAULT_DATE.getTime();
 		}
 		
-		if (tLastAccess == null) {
-			tLastAccess = DEFAULT_PWDATE;
+		if (tLastAccess == 0) {
+			tLastAccess = DEFAULT_DATE.getTime();
 		}
 		
-		if (tExpire == null) {
-			tExpire = PW_NEVER_EXPIRE;
+		if (tExpire == 0) {
+			tExpire = NEVER_EXPIRE.getTime();
 		}
 		
 		if (binaryDesc == null) {
@@ -527,4 +522,60 @@ public class EntryV3 extends Entry {
 	public void setParent(Group parent) {
 		this.parent = (GroupV3) parent;
 	}
+  
+  /* Parcelable */
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(uuid.length);           // ID length
+    dest.writeByteArray(uuid);            // ID    
+    dest.writeInt(password.length);       // Password length
+    dest.writeByteArray(password);        // Password
+    dest.writeInt(binaryData.length);     // Binary data length
+    dest.writeByteArray(binaryData);      // Binary data
+    dest.writeString(username);           // Username
+    dest.writeString(title);              // Title
+    dest.writeString(url);                // URL
+    dest.writeString(additional);         // Additional
+    dest.writeString(binaryDesc);         // Binary description
+    dest.writeInt(groupId);               // Group ID
+    dest.writeLong(tCreation);            // Creation date
+    dest.writeLong(tExpire);              // Expire date
+    dest.writeLong(tLastAccess);          // Last access date
+    dest.writeLong(tLastMod);             // Last mod date
+    dest.writeParcelable(parent, flags);  // Parent
+  }
+
+  public static final Parcelable.Creator<EntryV3> CREATOR
+      = new Parcelable.Creator<EntryV3>() {
+    public EntryV3 createFromParcel(Parcel in) {
+      return new EntryV3(in);
+    }
+
+    public EntryV3[] newArray(int size) {
+      return new EntryV3[size];
+    }
+  };
+
+  private EntryV3(Parcel in) {    
+    in.readByteArray(uuid = new byte[in.readInt()]);
+    in.readByteArray(password = new byte[in.readInt()]);
+    in.readByteArray(binaryData = new byte[in.readInt()]);
+    username = in.readString();
+    title = in.readString();
+    url = in.readString();
+    additional = in.readString();
+    binaryDesc = in.readString();
+    groupId = in.readInt();
+    tCreation = in.readLong();
+    tExpire = in.readLong();
+    tLastAccess = in.readLong();
+    tLastMod = in.readLong();
+    parent = in.readParcelable(GroupV3.class.getClassLoader());
+  }
 }

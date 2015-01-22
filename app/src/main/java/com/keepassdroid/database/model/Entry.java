@@ -19,6 +19,8 @@
  */
 package com.keepassdroid.database.model;
 
+import android.os.Parcelable;
+
 import java.util.Comparator;
 import java.util.Date;
 import java.util.UUID;
@@ -28,7 +30,7 @@ import com.keepassdroid.database.PwIcon;
 import com.keepassdroid.database.PwIconStandard;
 import com.keepassdroid.database.iterator.EntrySearchStringIterator;
 
-public abstract class Entry implements Cloneable {
+public abstract class Entry implements Cloneable, Parcelable {
 
   protected static final String PMS_TAN_ENTRY = "<TAN>";
 
@@ -111,13 +113,13 @@ public abstract class Entry implements Cloneable {
 
   public abstract String getNotes(boolean decodeRef, KDB db);
 
-  public abstract Date getCreationTime();
+  public abstract long getCreationTime();
 
-  public abstract Date getLastModificationTime();
+  public abstract long getLastModificationTime();
 
-  public abstract Date getLastAccessTime();
+  public abstract long getLastAccessTime();
 
-  public abstract Date getExpiryTime();
+  public abstract long getExpiryTime();
 
   public abstract boolean expires();
 
@@ -133,15 +135,15 @@ public abstract class Entry implements Cloneable {
 
   public abstract void setNotes(String notes, KDB db);
 
-  public abstract void setCreationTime(Date create);
+  public abstract void setCreationTime(long create);
 
-  public abstract void setLastModificationTime(Date mod);
+  public abstract void setLastModificationTime(long mod);
 
-  public abstract void setLastAccessTime(Date access);
+  public abstract void setLastAccessTime(long access);
 
   public abstract void setExpires(boolean exp);
 
-  public abstract void setExpiryTime(Date expires);
+  public abstract void setExpiryTime(long expires);
 
 
   public PwIcon getIcon() {
@@ -169,7 +171,7 @@ public abstract class Entry implements Cloneable {
   }
 
   public void touch(boolean modified, boolean touchParents) {
-    Date now = new Date();
+    long now = System.currentTimeMillis();
 
     setLastAccessTime(now);
 

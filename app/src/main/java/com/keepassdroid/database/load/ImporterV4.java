@@ -718,18 +718,14 @@ public class ImporterV4 extends Importer {
 		}
 	}
 	
-	private Date ReadTime(XmlPullParser xpp) throws IOException, XmlPullParserException {
+	private long ReadTime(XmlPullParser xpp) throws IOException, XmlPullParserException {
 		String sDate = ReadString(xpp);
 		
-		Date utcDate = null;
+		long utcDate = 0;
 		try {
-			utcDate = PwDatabaseV4XML.dateFormat.parse(sDate);
+			utcDate = PwDatabaseV4XML.dateFormat.parse(sDate).getTime();
 		} catch (ParseException e) {
 			// Catch with null test below
-		}
-		
-		if (utcDate == null) {
-			utcDate = new Date(0L);
 		}
 		
 		return utcDate;

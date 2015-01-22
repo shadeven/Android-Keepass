@@ -24,6 +24,7 @@ import java.io.OutputStream;
 
 import com.keepassdroid.database.model.EntryV3;
 import com.keepassdroid.stream.LEDataOutputStream;
+import com.keepassdroid.utils.DateUtils;
 import com.keepassdroid.utils.Types;
 
 public class PwEntryOutputV3 {
@@ -116,16 +117,16 @@ public class PwEntryOutputV3 {
 		outputBytes += addlLen;
 
 		// Create date
-		writeDate(CREATE_FIELD_TYPE, mPE.tCreation.getCDate());
+		writeDate(CREATE_FIELD_TYPE, DateUtils.millisecondsToBytes(mPE.tCreation));
 		
 		// Modification date
-		writeDate(MOD_FIELD_TYPE, mPE.tLastMod.getCDate());
+		writeDate(MOD_FIELD_TYPE, DateUtils.millisecondsToBytes(mPE.tLastMod));
 
 		// Access date
-		writeDate(ACCESS_FIELD_TYPE, mPE.tLastAccess.getCDate());
+		writeDate(ACCESS_FIELD_TYPE, DateUtils.millisecondsToBytes(mPE.tLastAccess));
 
 		// Expiration date
-		writeDate(EXPIRE_FIELD_TYPE, mPE.tExpire.getCDate());
+		writeDate(EXPIRE_FIELD_TYPE, DateUtils.millisecondsToBytes(mPE.tExpire));
 	
 		// Binary desc
 		mOS.write(BINARY_DESC_FIELD_TYPE);

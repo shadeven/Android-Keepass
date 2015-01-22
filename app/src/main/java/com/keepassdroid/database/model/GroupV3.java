@@ -30,14 +30,13 @@ Copyright 2006 Bill Zwicky <billzwicky@users.sourceforge.net>
 
 package com.keepassdroid.database.model;
 
-import com.keepassdroid.database.KDBV3;
-import com.keepassdroid.database.PwDate;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import java.util.Calendar;
+import com.keepassdroid.database.KDBV3;
+
 import java.util.Date;
 import java.util.List;
-
-
 
 /**
  * @author Brian Pellin <bpellin@gmail.com>
@@ -57,10 +56,10 @@ public class GroupV3 extends Group {
 
 	public int groupId;
 
-	public PwDate tCreation;
-	public PwDate tLastMod;
-	public PwDate tLastAccess;
-	public PwDate tExpire;
+	public long tCreation;
+	public long tLastMod;
+	public long tLastAccess;
+	public long tExpire;
 
 	public int level; // short
 
@@ -73,11 +72,11 @@ public class GroupV3 extends Group {
 
 	public GroupV3(String name, String id) {
 		super(name, id);
-		Date now = Calendar.getInstance().getTime();
-		tCreation = new PwDate(now);
-		tLastAccess = new PwDate(now);
-		tLastMod = new PwDate(now);
-		tExpire = new PwDate(GroupV3.NEVER_EXPIRE);
+		long now = System.currentTimeMillis();
+		tCreation = now;
+		tLastAccess = now;
+		tLastMod = now;
+		tExpire = NEVER_EXPIRE.getTime();
 	}
 
 	public void setGroups(List<Group> groups) {
@@ -105,8 +104,8 @@ public class GroupV3 extends Group {
 	}
 
 	@Override
-	public Date getLastMod() {
-		return tLastMod.getJDate();
+	public long getLastMod() {
+		return tLastMod;
 	}
 
 	@Override
@@ -124,35 +123,74 @@ public class GroupV3 extends Group {
 			name = "";
 		}
 		
-		if (tCreation == null) {
-			tCreation = EntryV3.DEFAULT_PWDATE;
+		if (tCreation == 0) {
+			tCreation = EntryV3.DEFAULT_DATE.getTime();
 		}
 		
-		if (tLastMod == null) {
-			tLastMod = EntryV3.DEFAULT_PWDATE;
+		if (tLastMod == 0) {
+			tLastMod = EntryV3.DEFAULT_DATE.getTime();
 		}
 		
-		if (tLastAccess == null) {
-			tLastAccess = EntryV3.DEFAULT_PWDATE;
+		if (tLastAccess == 0) {
+			tLastAccess = EntryV3.DEFAULT_DATE.getTime();
 		}
 		
-		if (tExpire == null) {
-			tExpire = EntryV3.DEFAULT_PWDATE;
+		if (tExpire == 0) {
+			tExpire = EntryV3.DEFAULT_DATE.getTime();
 		}
 	}
 
 	@Override
-	public void setLastAccessTime(Date date) {
-		tLastAccess = new PwDate(date);
+	public void setLastAccessTime(long date) {
+		tLastAccess = date;
 	}
 
 	@Override
-	public void setLastModificationTime(Date date) {
-		tLastMod = new PwDate(date);
+	public void setLastModificationTime(long date) {
+		tLastMod = date;
 	}
 	
 	@Override
 	public String toString() {
 		return name;
 	}
+  
+  /* Parcelable */
+
+  public int describeContents() {
+    return 0;
+  }
+
+  public void writeToParcel(Parcel out, int flags) {
+    super.writeToParcel(out, flags);
+    out.writeInt(groupId);      // ID
+    out.writeInt(level);        // Level
+    out.writeInt(this.flags);   // Flags
+    out.writeLong(tCreation);   // Creation date
+    out.writeLong(tExpire);     // Expire date
+    out.writeLong(tLastAccess); // Last access date
+    out.writeLong(tLastMod);    // Last mod date
+  }
+
+  public static final Parcelable.Creator<GroupV3> CREATOR
+      = new Parcelable.Creator<GroupV3>() {
+    public GroupV3 createFromParcel(Parcel in) {
+      return new GroupV3(in);
+    }
+
+    public GroupV3[] newArray(int size) {
+      return new GroupV3[size];
+    }
+  };
+
+  private GroupV3(Parcel in) {
+    super(in);
+    groupId = in.readInt();
+    level = in.readInt();
+    flags = in.readInt();
+    tCreation = in.readLong();
+    tExpire = in.readLong();
+    tLastAccess = in.readLong();
+    tLastMod = in.readLong();
+  }
 }

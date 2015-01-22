@@ -32,7 +32,7 @@ public class AuthenticationFragment extends BaseFragment {
   @Override
   public void onResume() {
     super.onResume();
-    getSupportActionBar().setTitle("Authentication");
+    getSupportActionBar().setTitle(R.string.title_authentication);
   }
 
   @Override

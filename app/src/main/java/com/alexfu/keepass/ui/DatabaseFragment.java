@@ -1,5 +1,6 @@
 package com.alexfu.keepass.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -22,7 +23,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class DatabaseFragment extends BaseFragment {
+public class DatabaseFragment extends BaseFragment implements AdapterView.OnItemClickListener {
   
   @InjectView(android.R.id.list) ListView listView;
   private Spinner spinner;
@@ -41,8 +42,7 @@ public class DatabaseFragment extends BaseFragment {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    getSupportActionBar().setTitle("");
+    super.onCreate(savedInstanceState);    
     
     if (kdb == null) return;
 
@@ -64,6 +64,12 @@ public class DatabaseFragment extends BaseFragment {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    getSupportActionBar().setTitle("");
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, 
                            @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_list, container, false);
@@ -80,9 +86,17 @@ public class DatabaseFragment extends BaseFragment {
     List<Entry> entries = spinnerAdapter.getItem(selectedGroupIndex).childEntries;
     listAdapter = new EntryAdapter(getActivity(), entries);
     listView.setAdapter(listAdapter);
+    listView.setOnItemClickListener(this);
   }
 
   public void setDatabase(KDB kdb) {
     this.kdb = kdb;
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    Intent intent = new Intent(getActivity(), EntryDetailsActivity.class);
+    intent.putExtra(EntryDetailsActivity.EXTRA_ENTRY, listAdapter.getItem(position));
+    startActivity(intent);
   }
 }

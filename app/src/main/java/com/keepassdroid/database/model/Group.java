@@ -19,6 +19,9 @@
  */
 package com.keepassdroid.database.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,7 +31,7 @@ import java.util.List;
 import com.keepassdroid.database.*;
 import com.keepassdroid.utils.StrUtil;
 
-public abstract class Group {
+public abstract class Group implements Parcelable {
 	public List<Group> childGroups = new ArrayList<Group>();
 	public List<Entry> childEntries = new ArrayList<Entry>();
 	public String name = "";
@@ -49,7 +52,7 @@ public abstract class Group {
 
 	public abstract String getName();
 	
-	public abstract Date getLastMod();
+	public abstract long getLastMod();
 	
 	public PwIcon getIcon() {
 		return icon;
@@ -67,9 +70,9 @@ public abstract class Group {
 		
 	}
 	
-	public abstract void setLastAccessTime(Date date);
+	public abstract void setLastAccessTime(long date);
 
-	public abstract void setLastModificationTime(Date date);
+	public abstract void setLastModificationTime(long date);
 	
 	public void sortEntriesByName() {
 		Collections.sort(childEntries, new Entry.EntryNameComparator());
@@ -89,7 +92,7 @@ public abstract class Group {
 	}
 	
 	public void touch(boolean modified, boolean touchParents) {
-		Date now = new Date();
+		long now = System.currentTimeMillis();
 		
 		setLastAccessTime(now);
 		
@@ -199,4 +202,14 @@ public abstract class Group {
 		return true;
 		
 	}
+  
+  /* Parcelable */
+
+  public void writeToParcel(Parcel out, int flags) {
+    out.writeString(name); // Name
+  }
+
+  protected Group(Parcel in) {
+    name = in.readString();
+  }
 }

@@ -5,5 +5,8 @@
   <dimen name="double_line_list_item_height">72dp</dimen>
 
   <dimen name="keyline_vertical_1">16dp</dimen>
+  
+  <dimen name="spacing_small">4dp</dimen>
+  <dimen name="spacing_medium">8dp</dimen>
 
 </resources>

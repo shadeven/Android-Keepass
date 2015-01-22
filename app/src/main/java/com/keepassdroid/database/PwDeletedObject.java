@@ -19,35 +19,34 @@
  */
 package com.keepassdroid.database;
 
-import java.util.Date;
 import java.util.UUID;
 
 public class PwDeletedObject {
 	public UUID uuid;
-	private Date deletionTime;
+	private long deletionTime;
 	
 	public PwDeletedObject() {
 		
 	}
 	
 	public PwDeletedObject(UUID u) {
-		this(u, new Date());
+		this(u, System.currentTimeMillis());
 	}
 	
-	public PwDeletedObject(UUID u, Date d) {
+	public PwDeletedObject(UUID u, long d) {
 		uuid = u;
 		deletionTime = d;
 	}
 	
-	public Date getDeletionTime() {
-		if ( deletionTime == null ) {
-			return new Date(System.currentTimeMillis());
+	public long getDeletionTime() {
+		if (deletionTime == 0) {
+			return System.currentTimeMillis();
 		}
 		
 		return deletionTime;
 	}
 	
-	public void setDeletionTime(Date date) {
+	public void setDeletionTime(long date) {
 		deletionTime = date;
 	}
 

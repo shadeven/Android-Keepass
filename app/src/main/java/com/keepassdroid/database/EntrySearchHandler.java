@@ -31,7 +31,7 @@ import com.keepassdroid.database.model.GroupV4;
 public abstract class EntrySearchHandler extends EntryHandler<Entry> {
 	private List<Entry> listStorage;
 	private SearchParameters sp;
-	private Date now;
+	private long now;
 	
 	public static EntrySearchHandler getInstance(Group group, SearchParameters sp, List<Entry> listStorage) {
 		if (group instanceof GroupV3) {
@@ -47,7 +47,7 @@ public abstract class EntrySearchHandler extends EntryHandler<Entry> {
 	protected EntrySearchHandler(SearchParameters sp, List<Entry> listStorage) {
 		this.sp = sp;
 		this.listStorage = listStorage;
-		now = new Date();
+		now = System.currentTimeMillis();
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public abstract class EntrySearchHandler extends EntryHandler<Entry> {
 			return true;
 		}
 		
-		if (sp.excludeExpired && entry.expires() && now.after(entry.getExpiryTime())) {
+		if (sp.excludeExpired && entry.expires() && now > entry.getExpiryTime()) {
 			return true;
 		}
 		

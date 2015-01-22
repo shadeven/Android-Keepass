@@ -56,13 +56,13 @@ public class KDBV4 extends KDB {
 	public UUID dataCipher;
 	public PwCompressionAlgorithm compressionAlgorithm;
     public long numKeyEncRounds;
-    public Date nameChanged = DEFAULT_NOW;
+    public long nameChanged = DEFAULT_NOW.getTime();
     public String description;
-    public Date descriptionChanged = DEFAULT_NOW;
+    public long descriptionChanged = DEFAULT_NOW.getTime();
     public String defaultUserName;
-    public Date defaultUserNameChanged = DEFAULT_NOW;
+    public long defaultUserNameChanged = DEFAULT_NOW.getTime();
     
-    public Date keyLastChanged = DEFAULT_NOW;
+    public long keyLastChanged = DEFAULT_NOW.getTime();
     public long keyChangeRecDays = -1;
     public long keyChangeForceDays = 1;
     
@@ -70,9 +70,9 @@ public class KDBV4 extends KDB {
     public String color = "";
     public boolean recycleBinEnabled;
     public UUID recycleBinUUID = null;
-    public Date recycleBinChanged = DEFAULT_NOW;
+    public long recycleBinChanged = DEFAULT_NOW.getTime();
     public UUID entryTemplatesGroup;
-    public Date entryTemplatesGroupChanged = DEFAULT_NOW;
+    public long entryTemplatesGroupChanged = DEFAULT_NOW.getTime();
     public int historyMaxItems = DEFAULT_HISTORY_MAX_ITEMS;
     public long historyMaxSize = DEFAULT_HISTORY_MAX_SIZE;
     public UUID lastSelectedGroup;

@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.keepassdroid.utils.DateUtils;
 import com.keepassdroid.utils.Types;
 
 /** Converting from the C Date format to the Java data format is
@@ -38,74 +39,53 @@ public class PwDate implements Cloneable {
 	private boolean cDateBuilt = false;
 	private boolean jDateBuilt = false;
 	
-	private Date jDate;
+	private long dateInMillis;
 	private byte[] cDate;
 	
 	public PwDate(byte[] buf, int offset) {
 		cDate = new byte[DATE_SIZE];
 		System.arraycopy(buf, offset, cDate, 0, DATE_SIZE);
 		cDateBuilt = true;
+    readTime(cDate, offset);
+    jDateBuilt = true;
 	}
 	
 	public PwDate(Date date) {
-		jDate = date;
+		dateInMillis = date.getTime();
 		jDateBuilt = true;
 	}
 	
 	public PwDate(long millis) {
-		jDate = new Date(millis);
+		dateInMillis = millis;
 		jDateBuilt = true;
 	}
 	
-	private PwDate() {
-		
-	}
-	
 	@Override
-	public Object clone() {
-		PwDate copy = new PwDate();
-		
-		if ( cDateBuilt ) {
-			byte[] newC = new byte[DATE_SIZE];
-			System.arraycopy(cDate, 0, newC, 0, DATE_SIZE);
-			copy.cDate = newC;
-			copy.cDateBuilt = true;
+	public PwDate clone() {		
+		if (cDateBuilt) {
+      return new PwDate(cDate, 0);
 		}
 		
-		if ( jDateBuilt ) {
-			copy.jDate = (Date) jDate.clone();
-			copy.jDateBuilt = true;
+		if (jDateBuilt) {
+      return new PwDate(dateInMillis);
 		}
-			
-		return copy;
-	}
-
-
-	
-	public Date getJDate() {
-		if ( ! jDateBuilt ) {
-			jDate = readTime(cDate, 0, Calendar.getInstance());
-			jDateBuilt = true;
-		}
-		
-		return jDate;
+    
+    return new PwDate(System.currentTimeMillis());
 	}
 	
-	public byte[] getCDate() {
-		if ( ! cDateBuilt ) {
-			cDate = writeTime(jDate, Calendar.getInstance());
-			cDateBuilt = true;
-		}
-		
+	public long getJDate() {	
+		return dateInMillis;
+	}
+	
+	public byte[] getCDate() {		
 		return cDate;
 	}
-	
 	
 	/**
 	 * Unpack date from 5 byte format. The five bytes at 'offset' are unpacked
 	 * to a java.util.Date instance.
 	 */
-	public static Date readTime(byte[] buf, int offset, Calendar time) {
+	public static long readTime(byte[] buf, int offset) {
 		int dw1 = Types.readUByte(buf, offset);
 		int dw2 = Types.readUByte(buf, offset + 1);
 		int dw3 = Types.readUByte(buf, offset + 2);
@@ -115,21 +95,14 @@ public class PwDate implements Cloneable {
 		// Unpack 5 byte structure to date and time
 		int year = (dw1 << 6) | (dw2 >> 2);
 		int month = ((dw2 & 0x00000003) << 2) | (dw3 >> 6);
-
 		int day = (dw3 >> 1) & 0x0000001F;
 		int hour = ((dw3 & 0x00000001) << 4) | (dw4 >> 4);
 		int minute = ((dw4 & 0x0000000F) << 2) | (dw5 >> 6);
 		int second = dw5 & 0x0000003F;
 
-		if (time == null) {
-			time = Calendar.getInstance();
-		}
 		// File format is a 1 based month, java Calendar uses a zero based month
 		// File format is a 1 based day, java Calendar uses a 1 based day
-		time.set(year, month - 1, day, hour, minute, second);
-
-		return time.getTime();
-
+    return DateUtils.getTimeInMillis(year, month-1, day, hour, minute, second);
 	}
 
 	public static byte[] writeTime(Date date) {
@@ -169,25 +142,25 @@ public class PwDate implements Cloneable {
 
 	@Override
 	public boolean equals(Object o) {
-		if ( this == o ) {
+		if (this == o) {
 			return true;
 		}
-		if ( o == null ) {
-			return false;
-		}
-		if ( getClass() != o.getClass() ) {
+    
+		if (o == null) {
 			return false;
 		}
 		
+    if (!(o instanceof PwDate)) return false;
+    
 		PwDate date = (PwDate) o;
-		if ( cDateBuilt && date.cDateBuilt ) {
+		if (cDateBuilt && date.cDateBuilt) {
 			return Arrays.equals(cDate, date.cDate);
-		} else if ( jDateBuilt && date.jDateBuilt ) {
-			return IsSameDate(jDate, date.jDate);
-		} else if ( cDateBuilt && date.jDateBuilt ) {
+		} else if (jDateBuilt && date.jDateBuilt) {
+			return dateInMillis == date.dateInMillis;
+		} else if (cDateBuilt && date.jDateBuilt) {
 			return Arrays.equals(date.getCDate(), cDate);
 		} else {
-			return IsSameDate(date.getJDate(), jDate);
+			return date.getJDate() == dateInMillis;
 		}
 	}
 
@@ -208,5 +181,4 @@ public class PwDate implements Cloneable {
 		(cal1.get(Calendar.SECOND) == cal2.get(Calendar.SECOND));
 	
 	}
-
 }
