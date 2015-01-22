@@ -1,6 +1,7 @@
 package com.alexfu.keepass.ui;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.alexfu.keepass.R;
@@ -43,5 +44,20 @@ public class EntryDetailsActivity extends BaseActivity {
     modifiedEditText.setText(sdf.format(new Date(entry.getLastModificationTime())));
     expiresEditText.setText(sdf.format(new Date(entry.getExpiryTime())));
   }
-  
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
 }
