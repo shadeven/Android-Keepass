@@ -5,11 +5,25 @@
   <string name="hello_world">Hello world!</string>
   <string name="action_settings">Settings</string>
   
+  <!-- Title strings -->
+  <string name="title_authentication">Authentication</string>
+  
   <!-- Provider strings -->
   <string name="provider_saf_title">Storage Access Framework</string>
   <string name="provider_saf_description">Access Google Drive, external file browsers, etc…</string>
   
+  <!-- Label strings -->
+  <string name="label_expires">Expires</string>
+  <string name="label_modified">Modified</string>
+  <string name="label_created">Created</string>
+  <string name="label_url">URL</string>
+  <string name="label_password">Password</string>
+  <string name="label_username">Username</string>
+
   <!-- Hint strings -->
-  <string name="hint_password">Password</string>
+  <string name="hint_password1">pa55w0rd</string>
+  <string name="hint_password2">Password</string>
+  <string name="hint_url">http://www.google.com</string>
+  <string name="hint_username">jdoe</string>
 
 </resources>

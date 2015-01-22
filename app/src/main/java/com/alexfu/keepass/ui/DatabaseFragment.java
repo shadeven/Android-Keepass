@@ -1,5 +1,6 @@
 package com.alexfu.keepass.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -89,6 +90,8 @@ public class DatabaseFragment extends BaseFragment implements AdapterView.OnItem
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    // TODO: Launch entry details
+    Intent intent = new Intent(getActivity(), EntryDetailsActivity.class);
+    intent.putExtra(EntryDetailsActivity.EXTRA_ENTRY, listAdapter.getItem(position));
+    startActivity(intent);
   }
 }

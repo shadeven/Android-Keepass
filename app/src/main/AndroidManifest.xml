@@ -22,6 +22,7 @@
     </activity>
 
     <activity android:name=".ui.DatabaseActivity"/>
+    <activity android:name=".ui.EntryDetailsActivity"/>
   </application>
 
 </manifest>

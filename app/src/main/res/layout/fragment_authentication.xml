@@ -9,7 +9,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:inputType="textPassword"
-    android:hint="@string/hint_password"/>
+    android:hint="@string/hint_password2"/>
   
   <Button
     android:id="@+id/btn_submit"
