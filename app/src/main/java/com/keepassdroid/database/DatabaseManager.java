@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.SyncFailedException;
 import java.util.HashSet;
 import java.util.Set;
@@ -109,33 +110,16 @@ public class DatabaseManager {
 	}
 	
 	public void SaveData(String filename) throws IOException, PwDbOutputException {
-		File tempFile = new File(filename + ".tmp");
-		FileOutputStream fos = new FileOutputStream(tempFile);
-		//BufferedOutputStream bos = new BufferedOutputStream(fos);
-		
-		//PwDbV3Output pmo = new PwDbV3Output(kdb, bos, App.getCalendar());
-		PwDbOutput pmo = PwDbOutput.getInstance(kdb, fos);
-		pmo.output();
-		//bos.flush();
-		//bos.close();
-		fos.close();
-		
-		// Force data to disk before continuing
-		try {
-			fos.getFD().sync();
-		} catch (SyncFailedException e) {
-			// Ignore if fsync fails. We tried.
-		}
-		
-		File orig = new File(filename);
-		
-		if ( ! tempFile.renameTo(orig) ) {
-			throw new IOException("Failed to store database.");
-		}
-		
-		mFilename = filename;
-		
+		File file = new File(filename);
+		FileOutputStream fos = new FileOutputStream(file);
+    save(fos);
+    fos.close();
 	}
+  
+  public void save(OutputStream outputStream) throws PwDbOutputException, IOException {
+    PwDbOutput pmo = PwDbOutput.getInstance(kdb, outputStream);
+    pmo.output();
+  }
 	
 	public void clear() {
 		dirty.clear();
