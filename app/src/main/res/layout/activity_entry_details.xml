@@ -40,6 +40,7 @@
         android:id="@+id/edit_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingRight="@dimen/min_touch_target_size"
         android:inputType="textPassword"
         android:hint="@string/hint_password"/>
 
@@ -49,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_marginRight="@dimen/spacing_small"
         android:src="@drawable/ic_password_visibility"
         android:background="?selectableItemBackgroundBorderless"/>
 
@@ -65,6 +67,7 @@
         android:id="@+id/edit_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingRight="@dimen/min_touch_target_size"
         android:inputType="textUri"
         android:hint="@string/hint_url"/>
 
@@ -74,6 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_marginRight="@dimen/spacing_small"
         android:src="@drawable/ic_action_launch"
         android:background="?selectableItemBackgroundBorderless"/>
 

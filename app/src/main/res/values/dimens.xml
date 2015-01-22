@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-  <dimen name="single_line_list_item_height">48dp</dimen>
+  <dimen name="min_touch_target_size">48dp</dimen>
+  <dimen name="single_line_list_item_height">@dimen/min_touch_target_size</dimen>
   <dimen name="double_line_list_item_height">72dp</dimen>
 
   <dimen name="keyline_vertical_1">16dp</dimen>
